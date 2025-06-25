@@ -1,0 +1,99 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Движение денежных средств</h2>
+    <form method="get" class="row g-3 mb-3">
+        <div class="col-md-2">
+            <input type="date" name="date_from" value="{{ request.GET.date_from }}" class="form-control" placeholder="С даты">
+        </div>
+        <div class="col-md-2">
+            <input type="date" name="date_to" value="{{ request.GET.date_to }}" class="form-control" placeholder="По дату">
+        </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">Статус</option>
+                {% for s in statuses %}
+                <option value="{{ s.id }}" {% if request.GET.status == s.id|stringformat:'s' %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="type" class="form-select">
+                <option value="">Тип</option>
+                {% for t in types %}
+                <option value="{{ t.id }}" {% if request.GET.type == t.id|stringformat:'s' %}selected{% endif %}>{{ t.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="category" class="form-select">
+                <option value="">Категория</option>
+                {% for c in categories %}
+                <option value="{{ c.id }}" {% if request.GET.category == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="subcategory" class="form-select">
+                <option value="">Подкатегория</option>
+                {% for sc in subcategories %}
+                <option value="{{ sc.id }}" {% if request.GET.subcategory == sc.id|stringformat:'s' %}selected{% endif %}>{{ sc.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Фильтровать</button>
+        </div>
+        <div class="col-md-2">
+            <a href="{% url 'cashflowrecord_add' %}" class="btn btn-success w-100">Добавить запись</a>
+        </div>
+    </form>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Тип</th>
+                <th>Категория</th>
+                <th>Подкатегория</th>
+                <th>Сумма</th>
+                <th>Комментарий</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in records %}
+            <tr>
+                <td>{{ r.date }}</td>
+                <td>{{ r.status }}</td>
+                <td>{{ r.type }}</td>
+                <td>{{ r.category }}</td>
+                <td>{{ r.subcategory }}</td>
+                <td>{{ r.amount }}</td>
+                <td>{{ r.comment|default:'-' }}</td>
+                <td>
+                    <a href="{% url 'cashflowrecord_edit' r.id %}" class="btn btn-sm btn-primary">✏️</a>
+                    <a href="{% url 'cashflowrecord_delete' r.id %}" class="btn btn-sm btn-danger">🗑️</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" class="text-center">Нет записей</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if is_paginated %}
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперёд</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %} 

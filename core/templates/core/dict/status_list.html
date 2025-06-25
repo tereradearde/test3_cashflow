@@ -1,0 +1,25 @@
+{% extends 'admin/base_site.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Статусы</h2>
+    <a href="{% url 'status_add' %}" class="btn btn-success mb-3">Добавить статус</a>
+    <table class="table table-bordered table-striped">
+        <thead><tr><th>ID</th><th>Название</th><th></th></tr></thead>
+        <tbody>
+        {% for obj in objects %}
+        <tr>
+            <td>{{ obj.id }}</td>
+            <td>{{ obj.name }}</td>
+            <td>
+                <a href="{% url 'status_edit' obj.id %}" class="btn btn-sm btn-primary">✏️</a>
+                <a href="{% url 'status_delete' obj.id %}" class="btn btn-sm btn-danger">🗑️</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-center">Нет статусов</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="/" class="btn btn-secondary">К записям ДДС</a>
+</div>
+{% endblock %} 

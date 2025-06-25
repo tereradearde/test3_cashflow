@@ -1,0 +1,72 @@
+{% extends 'admin/base_site.html' %}
+{% block extrahead %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Редактировать{% else %}Добавить{% endif %} запись</h2>
+    <form method="post" novalidate id="cashflow-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row g-3">
+            {% for field in form.visible_fields %}
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                    {{ field }}
+                    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                    {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-success">Сохранить</button>
+        <a href="{% url 'cashflowrecord_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+<script>
+$(function() {
+    function updateCategories() {
+        var typeId = $('#id_type').val();
+        $.ajax({
+            url: "{% url 'ajax_load_categories' %}",
+            data: { 'type_id': typeId },
+            success: function(data) {
+                var $category = $('#id_category');
+                $category.empty();
+                $category.append('<option value="">---------</option>');
+                $.each(data, function(i, item) {
+                    $category.append('<option value="' + item.id + '">' + item.name + '</option>');
+                });
+                $category.trigger('change');
+            }
+        });
+    }
+    function updateSubcategories() {
+        var categoryId = $('#id_category').val();
+        $.ajax({
+            url: "{% url 'ajax_load_subcategories' %}",
+            data: { 'category_id': categoryId },
+            success: function(data) {
+                var $subcategory = $('#id_subcategory');
+                $subcategory.empty();
+                $subcategory.append('<option value="">---------</option>');
+                $.each(data, function(i, item) {
+                    $subcategory.append('<option value="' + item.id + '">' + item.name + '</option>');
+                });
+            }
+        });
+    }
+    $('#id_type').change(function() {
+        updateCategories();
+    });
+    $('#id_category').change(function() {
+        updateSubcategories();
+    });
+    // Если форма редактирования, подгружаем подкатегории при загрузке
+    if ($('#id_category').val()) {
+        updateSubcategories();
+    }
+});
+</script>
+{% endblock %} 

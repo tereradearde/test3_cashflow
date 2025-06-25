@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+/media
+/staticfiles
+/static
+
+# Virtualenv
+venv/
+ENV/
+.env
+.env.*
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Migrations (optionally, keep if you want to version them)
+# core/migrations/__pycache__/
+# core/migrations/*.pyc 
