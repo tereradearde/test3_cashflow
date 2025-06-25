@@ -7,8 +7,8 @@
 
 1. **Клонируйте репозиторий:**
    ```bash
-   git clone <URL-ВАШЕГО-РЕПОЗИТОРИЯ>
-   cd <имя-папки>
+   git clone https://github.com/tereradearde/test3_cashflow
+   cd test3_cashflow
    ```
 
 2. **Создайте и активируйте виртуальное окружение:**
